@@ -1750,7 +1750,9 @@ ActiveRecord::Schema.define(:version => 20150625131437) do
     t.integer  "posts_count",                             :default => 0
     t.datetime "last_seen_at"
     t.string   "uuid"
+=begin
     t.string   "openid"
+=end
     t.boolean  "show_guide_box",                          :default => true
   end
 
