@@ -60,10 +60,10 @@ double_barrelled_lastname:
 
 # ******** Fixtures below this point used with new Rails association mechanism - hence, no IDs defined ********
 
-aaron_openid_person:  
-  first_name: "aaron openid"
-  last_name: "spiggle"
-  email: "aaron_openid@email.com"
+#aaron_openid_person:
+#  first_name: "aaron openid"
+#  last_name: "spiggle"
+#  email: "aaron_openid@email.com"
 
 
 person_for_owner_of_my_first_sop:
