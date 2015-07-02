@@ -2,7 +2,7 @@
 
 <h1>Manage Account</h1>
 
-<% unless @user.login.nil? && @user.openid %>
+<% unless @user.login.nil? %>
     <%= panel('Login Details') do %>
         <div class="form-group">
           <label>Login</label>
@@ -28,18 +28,3 @@
     <% end %>
 <% end -%>
 
-<%= panel('OpenID') do %>
-    <%= form_tag set_openid_user_path(@user), :method => :put do -%>
-        <%= error_messages_for :user %>
-
-        <div class="form-group">
-          <label><%= image_tag "openid-16x16.gif" %>OpenID</label>
-          <%= text_field_tag :openid_identifier, @user.openid, :class => 'form-control' %>
-          <p class="help-block">
-            To find out more about OpenID, <a href="http://openid.net" target="_blank">click here</a>.
-          </p>
-        </div>
-
-        <%= submit_tag 'Update',:disable_with=>"Updating...", :class => 'btn btn-primary' %>
-    <% end -%>
-<% end %>
