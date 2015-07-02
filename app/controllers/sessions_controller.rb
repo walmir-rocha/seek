@@ -12,9 +12,9 @@ class SessionsController < ApplicationController
     
   end
 
-  def auto_openid
-    create
-  end
+  # def auto_openid
+  #   create
+  # end
 
   def index    
     redirect_to root_path
@@ -25,11 +25,11 @@ class SessionsController < ApplicationController
   end
 
   def create
-    if using_open_id?
-      open_id_authentication
-    else      
+    # if using_open_id?
+    #   open_id_authentication
+    # else      
       password_authentication
-    end
+    # end
   end
 
   def destroy    
@@ -49,19 +49,19 @@ class SessionsController < ApplicationController
 
   protected
   
-  def open_id_authentication
-    authenticate_with_open_id do |result, identity_url|
-      if result.successful?
-        if @user = User.find_by_openid(identity_url)          
-          check_login
-        else
-          failed_login "Sorry, no user by that identity URL exists (#{identity_url})"
-        end
-      else
-        failed_login result.message
-      end
-    end
-  end
+  # def open_id_authentication
+  #   authenticate_with_open_id do |result, identity_url|
+  #     if result.successful?
+  #       if @user = User.find_by_openid(identity_url)          
+  #         check_login
+  #       else
+  #         failed_login "Sorry, no user by that identity URL exists (#{identity_url})"
+  #       end
+  #     else
+  #       failed_login result.message
+  #     end
+  #   end
+  # end
   
   def password_authentication
     if @user = User.authenticate(params[:login], params[:password])
