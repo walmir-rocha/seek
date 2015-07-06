@@ -98,6 +98,9 @@ gem 'bootstrap-tagsinput-rails'
 gem 'bootstrap-typeahead-rails'
 gem 'handlebars_assets'
 
+gem 'devise'
+gem 'omniauth'
+
 group :assets do
   gem 'turbo-sprockets-rails3'
   gem 'yui-compressor'
