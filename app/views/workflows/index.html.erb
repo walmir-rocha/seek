@@ -1,6 +1,6 @@
 <%= index_title(@category.nil? ? "Workflows" : "#{@category.name} Workflows") -%>
 
-<% if logged_in? and current_user.person.member? and !current_user.guest?%>
+<% if user_signed_in? and current_user.person.member? and !current_user.guest?%>
     <%= button_link_to 'Upload a workflow', "new", new_workflow_path(:category_id => params[:category_id]) %>
 <% end %>
 

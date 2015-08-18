@@ -20,7 +20,7 @@
 <% end -%>
 
 <!-- Favourite workflow button -->
-<% if logged_in? %>
+<% if user_signed_in? %>
     <% if Favourite.exists?(:user_id => current_user.id, :resource_type => 'Workflow', :resource_id => item.id) %>
         <%= button_link_to("Remove from Favourites", 'destroy', favourite_delete_workflow_path(item), {:method=>:delete}) -%>
     <% else %>

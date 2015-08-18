@@ -1,4 +1,4 @@
-<% logged_in?? cache_name = "footer" : cache_name = "footer1" %>
+<% user_signed_in?? cache_name = "footer" : cache_name = "footer1" %>
 
 <% cache cache_name do -%>
     <div id="ft">

@@ -3,15 +3,15 @@
 <%= panel do %>
 <div role="tabpanel">
   <ul class="nav nav-tabs" role="tablist">
-    <% if logged_in? %>
+    <% if user_signed_in? %>
         <li role="presentation" class="active"><a href="#your-runs" aria-controls="your-runs" role="tab" data-toggle="tab">Your runs</a></li>
     <% end %>
-    <li role="presentation" <%= 'class="active"'.html_safe unless logged_in?-%>>
+    <li role="presentation" <%= 'class="active"'.html_safe unless user_signed_in?-%>>
       <a href="#other-runs" aria-controls="other-runs" role="tab" data-toggle="tab">Other runs</a>
     </li>
   </ul>
   <div class="tab-content">
-    <% if logged_in? %>
+    <% if user_signed_in? %>
         <div role="tabpanel" class="tab-pane active" id="your-runs">
           <%= render :partial => 'table', :locals => {:runs => @user_runs,
                                                       :id => 'workflow_user_runs_table', :poll => false } %>
@@ -19,7 +19,7 @@
         </div>
     <% end %>
 
-    <div role="tabpanel" class="tab-pane <%= 'active'.html_safe unless logged_in?-%>" id="other-runs">
+    <div role="tabpanel" class="tab-pane <%= 'active'.html_safe unless user_signed_in?-%>" id="other-runs">
       <%= render :partial => 'table', :locals => {:runs => @extra_runs, :polling_url => request.url,
                                                   :id => 'workflow_runs_table', :poll => @runs.any? {|r| !r.complete?},
                                                   :redirect_to => taverna_player.runs_path, :show_user => true

@@ -1,5 +1,5 @@
 <% @page_title = @topic.title %>
-<% @monitoring = logged_in? && !Monitorship.count(:id, :conditions => ['user_id = ? and topic_id = ? and active = ?', current_user.id, @topic.id, true]).zero? %>
+<% @monitoring = user_signed_in? && !Monitorship.count(:id, :conditions => ['user_id = ? and topic_id = ? and active = ?', current_user.id, @topic.id, true]).zero? %>
 
 <div class="forums">
   <% content_for :right do -%>
@@ -12,7 +12,7 @@
     </p>
   <% end # right content -%>
 
-  <% if logged_in? && false %>
+  <% if user_signed_in? && false %>
   <%# disabled by added false above -%>
     <%= form_tag forum_topic_monitorship_path(@forum, @topic), :style => 'margin-top:0em; float:right;' do -%>
       <div>
@@ -43,13 +43,13 @@
   </div>
 
   <div class="contribution_title">
-    <h1 id="topic-title" <%= %( onmouseover="$('topic_mod').show();" onmouseout="$('topic_mod').hide();") if logged_in? %>>
+    <h1 id="topic-title" <%= %( onmouseover="$('topic_mod').show();" onmouseout="$('topic_mod').hide();") if user_signed_in? %>>
 
       <%= h @topic.title %>
       <% if @topic.locked? %>
         <span>(<%= 'locked'[] %>)</span>
       <% end %>
-      <% if logged_in? %>
+      <% if user_signed_in? %>
         <span style="display:none;" id="topic_mod">
           <% if @topic.editable_by?(current_user) -%>
             <%= link_to('edit'[], edit_forum_topic_path(@forum, @topic), :class => "utility") %> |
@@ -96,7 +96,7 @@
             <span class="posts"><%= '{count} post(s)'[(count=post.user.posts.size)==1 ? :post_count : :posts_count, number_with_delimiter(count)] %></span>
 
 
-            <% if logged_in? && post.editable_by?(current_user) -%>
+            <% if user_signed_in? && post.editable_by?(current_user) -%>
               <p>
                 <span class="edit">
                   <%= ajax_spinner_for "edit-post-#{post.id}", "spinner_bounce.gif" %>
@@ -114,7 +114,7 @@
           </td>
           <td class="body entry-content" id="post-body-<%= post.id %>">
             <!--
-            <%= link_to_function image_tag('clearbits/comment.gif', :class => 'icon reply'), "$('reply').toggle()" if logged_in? %>
+            <%= link_to_function image_tag('clearbits/comment.gif', :class => 'icon reply'), "$('reply').toggle()" if user_signed_in? %>
             -->
             <%= render :partial => 'posts/post', :object => post %>
           </td>
@@ -124,7 +124,7 @@
 
     <%= will_paginate @posts %>
 
-    <% if logged_in? %>
+    <% if user_signed_in? %>
       <div id="edit"></div>
       <% if @topic.locked? %>
         <p>

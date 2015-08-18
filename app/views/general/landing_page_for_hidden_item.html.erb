@@ -1,7 +1,7 @@
 <div class="landing_page">
   <% asset_type =  t("#{controller_name.singularize}") %>
   <h2 class="forbidden">The <%= asset_type %> is not visible to you.</h2>
-  <% unless logged_in? %>
+  <% unless user_signed_in? %>
     <p style="text-align: center;">You may need to login to access this <%= asset_type %>.</p>
   <% end %>
 

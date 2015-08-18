@@ -35,7 +35,7 @@ class UsersController < ApplicationController
 
   def activate
     self.current_user = params[:activation_code].blank? ? false : User.find_by_activation_code(params[:activation_code])
-    if logged_in? && !current_user.active?
+    if user_signed_in? && !current_user.active?
       current_user.activate      
       if (current_user.person.projects.empty? && User.count>1)
         Mailer.welcome_no_projects(current_user, base_host).deliver
@@ -62,7 +62,7 @@ class UsersController < ApplicationController
           user.reset_password_code_until = nil
           if user.save
             self.current_user = user
-            if logged_in?
+            if user_signed_in?
               flash[:notice] = "You can change your password here"
               format.html { redirect_to(:action => "edit", :id => user.id) }
             else

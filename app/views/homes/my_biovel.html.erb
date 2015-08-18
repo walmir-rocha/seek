@@ -1,6 +1,6 @@
 <h1>My BioVeL</h1>
 
-<% if logged_in? %>
+<% if user_signed_in? %>
     <%= folding_panel('Runs') do %>
         <%= render :partial=>"recent_runs" -%>
         <br/>

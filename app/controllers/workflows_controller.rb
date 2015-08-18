@@ -257,7 +257,7 @@ class WorkflowsController < ApplicationController
     # Has the user cleared the search box? - return all items.
     uploader = params[:uploader_id]
     category = params[:category_id]
-    params.delete(:visibility) unless logged_in?
+    params.delete(:visibility) unless user_signed_in?
     visibility = params[:visibility]
     search_query = params[:query] || []
     search_included = (params[:commit] == 'Clear') ? false : true

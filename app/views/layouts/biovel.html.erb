@@ -54,7 +54,7 @@
             <%= flash[:notice] %>
         <% end %>
     <% end %>
-    <% if logged_in? && current_user.person && current_user.person.projects.empty? %>
+    <% if user_signed_in? && current_user.person && current_user.person.projects.empty? %>
         <%= alert_box('warning') do %>
             <%= image 'denied', :class => 'icon' %> Your project membership has not been confirmed.
             You will be unable to run or upload workflows until an administrator confirms your membership.

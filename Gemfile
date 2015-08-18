@@ -99,7 +99,7 @@ gem 'bootstrap-typeahead-rails'
 gem 'handlebars_assets'
 
 gem 'devise'
-gem 'omniauth'
+gem 'omniauth-ldap'
 
 group :assets do
   gem 'turbo-sprockets-rails3'

@@ -5,6 +5,10 @@ class User < ActiveRecord::Base
   acts_as_annotation_source
   include SavageBeast::UserInit
 
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable,
+         :omniauthable, :omniauth_providers => [:ldap]
+
   acts_as_tagger
     
   belongs_to :person

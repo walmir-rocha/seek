@@ -12,7 +12,7 @@
   <div class="spreadsheet_controls">
     <%= link_to image('spreadsheet') + " List Annotations", "#", :onclick =>"$j('div.spreadsheet_popup').hide(); $j('div#annotation_overview').show();return false;",
           :title => "Add new annotation", :class => "spreadsheet_button" %>
-    <% if logged_in? %>
+    <% if user_signed_in? %>
     <%= link_to image('spreadsheet_annotation_add') + " Add Annotation", "#", :onclick =>"$j('div.spreadsheet_popup').hide(); $j('div#annotation_form').show();return false;",
           :title => "Add new annotation", :class => "spreadsheet_button requires_selection" %>
     <% end %>

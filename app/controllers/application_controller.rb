@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
 
   after_filter :log_event
 
-  include AuthenticatedSystem
+  # include AuthenticatedSystem
 
   around_filter :with_current_user
 
@@ -105,7 +105,7 @@ class ApplicationController < ActionController::Base
   end
 
   def logout_user
-    current_user.forget_me if logged_in?
+    current_user.forget_me if user_signed_in?
     cookies.delete :auth_token
     cookies.delete :open_id
     reset_session
@@ -539,9 +539,9 @@ class ApplicationController < ActionController::Base
 
 
   def log_extra_exception_data
-      request.env["exception_notifier.exception_data"] = {
-          :current_logged_in_user=>current_user
-      }
+      # request.env["exception_notifier.exception_data"] = {
+      #     :current_logged_in_user=>current_user
+      # }
   end
 
 end

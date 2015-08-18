@@ -76,14 +76,14 @@
           <!-- Events tab -->
           <%= tab_definition :controllers => ["events"] ,:title=>t('event').pluralize if Seek::Config.events_enabled -%>
           <!-- Forums tab -->
-          <%= tab_definition :controllers => ["forums"] if logged_in? -%>
+          <%= tab_definition :controllers => ["forums"] if user_signed_in? -%>
         </div>
 
       </div>
     </td>
     <td>
       <div class="tab_gap_before">
-        <%= link_to "Content Statistics", statistics_path,{:class =>"item1 curved_top",:target=>"_blank"} if logged_in?%>
+        <%= link_to "Content Statistics", statistics_path,{:class =>"item1 curved_top",:target=>"_blank"} if user_signed_in?%>
       </div>
     </td>
     <td>

@@ -27,7 +27,7 @@ class TopicsController < ApplicationController
         # see notes in application.rb on how this works
         update_last_seen_at
         # keep track of when we last viewed this topic for activity indicators
-        (session[:topics] ||= {})[@topic.id] = Time.now.utc if logged_in?
+        (session[:topics] ||= {})[@topic.id] = Time.now.utc if user_signed_in?
         # authors of topics don't get counted towards total hits
         @topic.hit! unless logged_in? and @topic.user == current_user
         @posts = @topic.posts.paginate :page => params[:page]

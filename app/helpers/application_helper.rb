@@ -250,7 +250,7 @@ module ApplicationHelper
     
     if contributor.class.name == "User"
       # this string will output " (you) " for current user next to the display name, when invoked with 'you_text == true'
-      you_string = (you_text && logged_in? && user.id == current_user.id) ? "<small style='vertical-align: middle; color: #666666; margin-left: 0.5em;'>(you)</small>" : ""
+      you_string = (you_text && user_signed_in? && user.id == current_user.id) ? "<small style='vertical-align: middle; color: #666666; margin-left: 0.5em;'>(you)</small>" : ""
       contributor_person = contributor.person
       contributor_name = h(contributor_person.name)
       contributor_url = person_path(contributor_person.id)
@@ -272,7 +272,7 @@ module ApplicationHelper
   # user - for example, SOPs and others
   def mine?(thing)
     return false if thing.nil?
-    return false unless logged_in?
+    return false unless user_signed_in?
     
     c_id = current_user.id.to_i
     

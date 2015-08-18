@@ -14,6 +14,8 @@ SEEK::Application.routes.draw do
 
   root :to => "homes#index"
 
+  devise_for :users, :controllers => {:omniauth_callbacks => "omniauth_callbacks"}
+
   resource :admin do
     member do
       get :show
@@ -642,6 +644,8 @@ SEEK::Application.routes.draw do
   match '/signup' => 'users#new', :as => :signup
 
   match '/logout' => 'sessions#destroy', :as => :logout
+
+# Need to fix
   match '/login' => 'sessions#new', :as => :login
   match '/activate/:activation_code' => 'users#activate', :activation_code => nil, :as => :activate
   match '/forgot_password' => 'users#forgot_password', :as => :forgot_password

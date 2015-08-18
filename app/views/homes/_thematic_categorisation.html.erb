@@ -19,7 +19,7 @@
       <% end %>
     <% end %>
   <% end %>
-  <% if logged_in? %>
+  <% if user_signed_in? %>
     <%= link_to my_biovel_path, :class => "workflow-category my-biovel" do %>
       <%= image_tag "biovel-logo-no-text.png", :size => '64x64', :alt => 'BioVeL Logo' %>
       <br/>

@@ -18,7 +18,7 @@
             <%= view_content_button display_asset %>
         <% end %>
     <% end -%>
-    <% if logged_in? && !can_download_asset?(asset, params[:code]) %>
+    <% if user_signed_in? && !can_download_asset?(asset, params[:code]) %>
         <%= render :partial=>"assets/request_resource",:locals=>{:resource=>asset} %>
     <% end -%>
 <% end -%>
