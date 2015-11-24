@@ -9,7 +9,7 @@
                              'Datacite password', 'The password DataCite provided you with for your organization.') %>
   
 
-  <%= admin_text_setting(:datacite_url, Seek::Config.datacite_url,
+  <%= admin_url_setting(:datacite_url, Seek::Config.datacite_url,
                          'Datacite URL', 'The root URL for the Datacite rest service. If it is not set, https://mds.datacite.org will be used. You can also set the test url, https://test.datacite.org/mds/, for generating test DOIs.') %>
 
   <%= admin_text_setting(:doi_prefix, Seek::Config.doi_prefix,

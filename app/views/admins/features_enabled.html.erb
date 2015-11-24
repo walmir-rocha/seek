@@ -34,7 +34,7 @@
                                "JWS Online enabled", "Whether integration with JWS Online is enabled. Enabling this allows simulation of SBML models with JWS Online.",
                                :onchange=>toggle_appear_javascript('jws_online_details')) %>
     <div id="jws_online_details" class="additional_settings" style="<%= show_or_hide_block Seek::Config.jws_enabled -%>">
-      <%= admin_text_setting(:jws_online_root, Seek::Config.jws_online_root,
+      <%= admin_url_setting(:jws_online_root, Seek::Config.jws_online_root,
                              'JWS Online Root URL', "This is the root URL for the JWS Online server SEEK communicates with, e.g. http://jjj.mib.ac.uk .") %>
     </div>
 
@@ -42,8 +42,8 @@
                                "Internal help enabled", "Whether internal help pages should be used. Disabling this allows the use of external help pages.",
                                :onchange=>toggle_appear_javascript('external_help_details')) %>
     <div id="external_help_details" class="additional_settings" style="<%= show_or_hide_block !Seek::Config.internal_help_enabled -%>">
-      <%= admin_text_setting(:external_help_url, Seek::Config.external_help_url,
-                             'Help URL', "This is the URL for the external help.") %>
+      <%= admin_url_setting(:external_help_url, Seek::Config.external_help_url,
+                             'Help URL', "This is the URL for the external help e.g. http://seek4science.github.io/seek/help.") %>
     </div>
 
     <%= admin_checkbox_setting(:google_analytics_enabled, 1, Seek::Config.google_analytics_enabled,

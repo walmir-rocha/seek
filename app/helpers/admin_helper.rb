@@ -66,6 +66,14 @@ module AdminHelper
     end
   end
 
+  def admin_url_setting(name, value, title, description = nil, options = {})
+    admin_setting_block(title, description) do
+      text_field_tag(name, value, options.merge!(:class => 'form-control', :type => 'url',
+                                                 :oninvalid=>"setCustomValidity('Invalid URL for #{title}')",
+                                                 :onchange => "try{setCustomValidity('')}catch(e){}" ))
+    end
+  end
+
   def admin_textarea_setting(name, value, title, description = nil, options = {})
     rows = options[:rows].nil? ? 5 : options[:rows]
     admin_setting_block(title, description) do
