@@ -42,6 +42,7 @@ tmp/testing-filestore
 tmp/testing-seek-cache
 tmp/rubycritic
 tmp/fleximage
+tmp/performance
 *.tmp*
 *~
 

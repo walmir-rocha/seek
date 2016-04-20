@@ -94,5 +94,6 @@ module SEEK
     #uncomment and set the value if running under a suburi
     #config.relative_url_root = '/seek'
 
+    config.middleware.use "Rack::RequestProfiler"
   end
 end

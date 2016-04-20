@@ -101,6 +101,8 @@ gem "zenodo-client", :github=>"seek4science/zenodo-client"
 
 gem 'unicorn-rails'
 
+gem 'request_profiler'
+
 group :assets do
   gem 'turbo-sprockets-rails3'
   gem 'yui-compressor'
