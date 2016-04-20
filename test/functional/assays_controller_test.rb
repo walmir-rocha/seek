@@ -10,6 +10,7 @@ class AssaysControllerTest < ActionController::TestCase
   include SharingFormTestHelper
   include RdfTestCases
   include FunctionalAuthorizationTests
+  include HtmlHelper
 
   def setup
     login_as(:quentin)
@@ -144,7 +145,9 @@ class AssaysControllerTest < ActionController::TestCase
     assert !assay.data_files.include?(df.latest_version)
     sleep(1)
     assert_difference('ActivityLog.count') do
-      put :update, :id=>assay, :data_file_ids=>["#{df.id},Test data"], :assay=>{}
+      put :update, :id=>assay,
+          :data_files=>[{id: df.id, relationship_type: RelationshipType.find_by_title('Test data').id}],
+          :assay=>{}
     end
 
     assert_redirected_to assay_path(assay)
@@ -716,7 +719,7 @@ class AssaysControllerTest < ActionController::TestCase
           }, :sharing => valid_sharing ,
                :assay_sop_ids=>["#{sop.id}"],
                :model_ids=>["#{model.id}"],
-               :data_file_ids=>["#{datafile.id},#{rel.title}"]
+               :data_files=>[{id: datafile.id, relationship_type: rel.id}]
         end
       end
     end
@@ -728,10 +731,11 @@ class AssaysControllerTest < ActionController::TestCase
     assert_select "script", :text=>/sop_id = '#{sop.id}'/, :count=>1
     assert_select "script", :text=>/model_title = '#{model.title}'/, :count=>1
     assert_select "script", :text=>/model_id = '#{model.id}'/, :count=>1
-    assert_select "script", :text=>/data_title = '#{datafile.title}'/, :count=>1
-    assert_select "script", :text=>/data_file_id = '#{datafile.id}'/, :count=>1
-    assert_select "script", :text=>/relationship_type = '#{rel.title}'/, :count=>1
-    assert_select "script", :text=>/addDataFile/, :count=>1
+    df_json = JSON.parse(select_node_contents('#data_file_to_list script'))
+    assert_equal 1, df_json.length
+    assert_equal datafile.title, df_json[0]['title']
+    assert_equal datafile.id, df_json[0]['id']
+    assert_equal rel.id.to_s, df_json[0]['relationship_type']['value']
     assert_select "script", :text=>/addSop/, :count=>1
     assert_select "script", :text=>/addModel/, :count=>1
   end
@@ -758,7 +762,7 @@ class AssaysControllerTest < ActionController::TestCase
           },
                :assay_sop_ids=>["#{sop.id}"],
                :model_ids=>["#{model.id}"],
-               :data_file_ids=>["#{df.id},#{rel.title}"],
+               :data_files=>[{id: df.id, relationship_type: rel.id}],
                :related_publication_ids=>["#{pub.id}"],
                :sharing => valid_sharing # default policy is nil in VLN
           end
@@ -800,7 +804,7 @@ class AssaysControllerTest < ActionController::TestCase
           put :update, :id=>assay, :assay=>{:title=>"", :assay_class_id=>assay_classes(:modelling_assay_class).id},
               :assay_sop_ids=>["#{sop.id}"],
               :model_ids=>["#{model.id}"],
-              :data_file_ids=>["#{datafile.id},#{rel.title}"]
+              :data_files=>[{id: datafile.id, relationship_type: rel.id}]
         end
       end
     end
@@ -812,10 +816,11 @@ class AssaysControllerTest < ActionController::TestCase
     assert_select "script", :text=>/sop_id = '#{sop.id}'/, :count=>1
     assert_select "script", :text=>/model_title = '#{model.title}'/, :count=>1
     assert_select "script", :text=>/model_id = '#{model.id}'/, :count=>1
-    assert_select "script", :text=>/data_title = '#{datafile.title}'/, :count=>1
-    assert_select "script", :text=>/data_file_id = '#{datafile.id}'/, :count=>1
-    assert_select "script", :text=>/relationship_type = '#{rel.title}'/, :count=>1
-    assert_select "script", :text=>/addDataFile/, :count=>1
+    df_json = JSON.parse(select_node_contents('#data_file_to_list script'))
+    assert_equal 1, df_json.length
+    assert_equal datafile.title, df_json[0]['title']
+    assert_equal datafile.id, df_json[0]['id']
+    assert_equal rel.id.to_s, df_json[0]['relationship_type']['value']
     assert_select "script", :text=>/addSop/, :count=>1
     assert_select "script", :text=>/addModel/, :count=>1
   end
@@ -1324,6 +1329,25 @@ class AssaysControllerTest < ActionController::TestCase
     get :show, :id=> assay.id
     assert_response :success
     assert_select "div.panel-body div", :text => other_creators
+  end
+
+  test "programme assays through nested routing" do
+    assert_routing 'programmes/2/assays', { controller: 'assays' ,action: 'index', programme_id: '2'}
+    programme = Factory(:programme)
+    investigation = Factory(:investigation, projects: programme.projects, policy: Factory(:public_policy))
+    investigation2 = Factory(:investigation, policy: Factory(:public_policy))
+    study = Factory(:study, investigation: investigation, policy: Factory(:public_policy))
+    study2 = Factory(:study, investigation: investigation2, policy: Factory(:public_policy))
+    assay = Factory(:assay, study: study, policy: Factory(:public_policy))
+    assay2 = Factory(:assay, study: study2, policy: Factory(:public_policy))
+
+    get :index, programme_id: programme.id
+
+    assert_response :success
+    assert_select "div.list_item_title" do
+      assert_select "a[href=?]", assay_path(assay), text: assay.title
+      assert_select "a[href=?]", assay_path(assay2), text: assay2.title, count: 0
+    end
   end
 
 end
