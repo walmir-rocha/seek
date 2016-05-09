@@ -246,8 +246,9 @@ SEEK::Application.routes.draw do
       post :resource_in_tab
     end
     resources :people,:projects,:assays,:studies,:models,:sops,:data_files,:publications,:only=>[:index]
-    resources :snapshots, :only => [:show, :new, :create] do
+    resources :snapshots, :only => [:show, :new, :create, :destroy] do
       member do
+        get :mint_doi_confirm
         post :mint_doi
         get :download
         get :export, to: :export_preview
@@ -271,8 +272,9 @@ SEEK::Application.routes.draw do
       post :items_for_result
       post :resource_in_tab
     end
-    resources :snapshots, :only => [:show, :new, :create] do
+    resources :snapshots, :only => [:show, :new, :create, :destroy] do
       member do
+        get :mint_doi_confirm
         post :mint_doi
         get :download
         get :export, to: :export_preview
@@ -298,8 +300,9 @@ SEEK::Application.routes.draw do
       #MERGENOTE - these should be gets and are tested as gets, using post to fix later
       post :resource_in_tab
     end
-    resources :snapshots, :only => [:show, :new, :create] do
+    resources :snapshots, :only => [:show, :new, :create, :destroy] do
       member do
+        get :mint_doi_confirm
         post :mint_doi
         get :download
         get :export, to: :export_preview
@@ -383,6 +386,7 @@ SEEK::Application.routes.draw do
     resources :content_blobs do
       member do
         get :view_pdf_content
+        get :view_content
         get :get_pdf
         get :download
       end
@@ -413,6 +417,7 @@ SEEK::Application.routes.draw do
     resources :content_blobs do
       member do
         get :view_pdf_content
+        get :view_content
         get :get_pdf
         get :download
       end
@@ -458,10 +463,11 @@ SEEK::Application.routes.draw do
         post :select
       end
     end
-    resources :content_blobs do
 
+    resources :content_blobs do
       member do
         get :view_pdf_content
+        get :view_content
         get :get_pdf
         get :download
       end
@@ -499,6 +505,7 @@ SEEK::Application.routes.draw do
     resources :content_blobs do
       member do
         get :view_pdf_content
+        get :view_content
         get :get_pdf
         get :download
       end

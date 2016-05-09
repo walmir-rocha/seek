@@ -21,6 +21,9 @@ class SampleAttributeTypeTest < ActiveSupport::TestCase
     type = SampleAttributeType.new(title: 'x-type', base_type: 'String', regexp: 'xxx')
     assert type.valid?
 
+    type = SampleAttributeType.new(title: 'x-type', base_type: 'CV')
+    assert type.valid?
+
   end
 
   test 'default regexp' do
@@ -143,7 +146,7 @@ class SampleAttributeTypeTest < ActiveSupport::TestCase
   end
 
   test 'allowed types' do
-    assert_equal %w(Boolean Date DateTime Float Integer String Text).sort, SampleAttributeType.allowed_base_types.sort
+    assert_equal %w(Boolean CV Date DateTime Float Integer SeekStrain String Text).sort, SampleAttributeType.allowed_base_types.sort
   end
 
   test 'chebi atribute' do

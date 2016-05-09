@@ -791,6 +791,24 @@ end
     f.original_filename 'txt_test.txt'
   end
 
+  Factory.define(:csv_content_blob, :parent => :content_blob) do |f|
+    f.data File.new("#{Rails.root}/test/fixtures/files/csv_test.csv", "rb").read
+    f.content_type "text/x-comma-separated-values"
+    f.original_filename 'csv_test.csv'
+  end
+
+  Factory.define(:tsv_content_blob, :parent => :content_blob) do |f|
+    f.data File.new("#{Rails.root}/test/fixtures/files/tsv_test.tsv", "rb").read
+    f.content_type "text/tab-separated-values"
+    f.original_filename 'tsv_test.tsv'
+  end
+
+  Factory.define(:json_content_blob, :parent => :content_blob) do |f|
+    f.data File.new("#{Rails.root}/test/fixtures/files/slideshare.json", "rb").read
+    f.content_type "application/json"
+    f.original_filename 'slideshare.json'
+  end
+
   Factory.define(:typeless_content_blob, :parent=>:content_blob) do |f|
     f.data File.new("#{Rails.root}/test/fixtures/files/file_with_no_extension", "rb").read
     f.content_type nil
@@ -820,6 +838,12 @@ end
     f.original_filename "sample-type-populated.xlsx"
     f.content_type "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     f.data  File.new("#{Rails.root}/test/fixtures/files/sample-type-populated.xlsx","rb").read
+  end
+
+  Factory.define(:strain_sample_data_content_blob, :parent => :content_blob) do |f|
+    f.original_filename "strain-sample-data.xlsx"
+    f.content_type "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    f.data  File.new("#{Rails.root}/test/fixtures/files/strain-sample-data.xlsx","rb").read
   end
 
   Factory.define(:activity_log) do |f|
@@ -1132,6 +1156,11 @@ end
     f.base_type 'Boolean'
   end
 
+  Factory.define(:strain_sample_attribute_type,:class=>SampleAttributeType) do |f|
+    f.sequence(:title) {|n| "Strain attribute type #{n}"}
+    f.base_type 'SeekStrain'
+  end
+
   Factory.define(:sample_attribute) do |f|
     f.sequence(:title) {|n| "Sample attribute #{n}"}
     f.association :sample_type, :factory => :sample_type
@@ -1199,16 +1228,56 @@ end
 Factory.define(:sample) do |f|
   f.sequence(:title) {|n| "Sample #{n}"}
   f.association :sample_type,:factory=>:simple_sample_type
-  f.after_build do |s|
-    s.the_title = s.title if s.respond_to?(:the_title)
+  f.after_build do |sample|
+    sample.set_attribute(:the_title, sample.title) if sample.data.key?(:the_title)
   end
 end
 
 Factory.define(:patient_sample, :parent=>:sample) do |f|
   f.association :sample_type, :factory => :patient_sample_type
+  f.after_build do |sample|
+    sample.set_attribute(:full_name, "Fred Bloggs")
+    sample.set_attribute(:age, 44)
+    sample.set_attribute(:weight, 88.7)
+  end
+end
+
+Factory.define(:strain_sample_type, :parent=>:sample_type) do |f|
+  f.title "Strain type"
   f.after_build do |type|
-    type.full_name="Fred Bloggs"
-    type.age=44
-    type.weight=88.7
+    type.sample_attributes << Factory.build(:sample_attribute,:title=>"name",:sample_attribute_type=>Factory(:string_sample_attribute_type),:required=>true,:is_title=>true, :sample_type => type)
+    type.sample_attributes << Factory.build(:sample_attribute,:title=>"seekstrain",:sample_attribute_type=>Factory(:strain_sample_attribute_type),:required=>true, :sample_type => type)
+  end
+end
+
+Factory.define(:sample_controlled_vocab_term) do |f|
+
+end
+
+Factory.define(:apples_sample_controlled_vocab,class:SampleControlledVocab) do |f|
+  f.sequence(:title) {|n| "apples controlled vocab #{n}"}
+  f.after_build do |vocab|
+    vocab.sample_controlled_vocab_terms << Factory.build(:sample_controlled_vocab_term,label:'Granny Smith')
+    vocab.sample_controlled_vocab_terms << Factory.build(:sample_controlled_vocab_term,label:'Golden Delicious')
+    vocab.sample_controlled_vocab_terms << Factory.build(:sample_controlled_vocab_term,label:'Bramley')
+    vocab.sample_controlled_vocab_terms << Factory.build(:sample_controlled_vocab_term,label:"Cox's Orange Pippin")
+  end
+end
+
+Factory.define(:controlled_vocab_attribute_type,:class=>SampleAttributeType) do |f|
+  f.sequence(:title) {|n| "CV attribute type #{n}"}
+  f.base_type 'CV'
+end
+
+Factory.define(:apples_controlled_vocab_attribute,parent: :sample_attribute) do |f|
+  f.sequence(:title) {|n| "apples controlled vocab attribute #{n}"}
+  f.association :sample_controlled_vocab,:factory=>:apples_sample_controlled_vocab
+  f.sample_attribute_type Factory(:controlled_vocab_attribute_type)
+end
+
+Factory.define(:apples_controlled_vocab_sample_type, :parent=>:sample_type) do |f|
+  f.sequence(:title) {|n| "apples controlled vocab sample type #{n}"}
+  f.after_build do |type|
+    type.sample_attributes << Factory.build(:apples_controlled_vocab_attribute,title:'apples',is_title:true,required:true,sample_type:type)
   end
 end

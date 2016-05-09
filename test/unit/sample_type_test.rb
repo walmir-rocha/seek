@@ -123,6 +123,14 @@ class SampleTypeTest < ActiveSupport::TestCase
     end
   end
 
+  test 'controlled vocab sample type validate_value' do
+    type = Factory(:apples_controlled_vocab_sample_type)
+    assert type.validate_value?('apples','Granny Smith')
+    refute type.validate_value?('apples','Orange')
+    refute type.validate_value?('apples',1)
+    refute type.validate_value?('apples',nil)
+  end
+
   test "must have one title attribute" do
     type = SampleType.new title:"No title"
     type.sample_attributes << Factory(:sample_attribute,:title=>"full name",:sample_attribute_type=>Factory(:full_name_sample_attribute_type),:required=>true,:is_title=>false, :sample_type => type)
@@ -256,6 +264,8 @@ class SampleTypeTest < ActiveSupport::TestCase
     assert_equal [sample_type],SampleType.sample_types_matching_content_blob(template_blob)
   end
 
+
+
   test 'build samples from template' do
     Factory(:string_sample_attribute_type, title:'String')
     sample_type = SampleType.new title:'from template'
@@ -269,10 +279,10 @@ class SampleTypeTest < ActiveSupport::TestCase
 
     sample = samples.first
     assert sample.valid?
-    assert_equal "Bob Monkhouse",sample.full_name
-    assert_equal "Blue", sample.hair_colour
-    assert_equal "Yellow", sample.eye_colour
-    assert_equal Date.parse("12 March 1970"), Date.parse(sample.date_of_birth)
+    assert_equal "Bob Monkhouse",sample.get_attribute(:full_name)
+    assert_equal "Blue", sample.get_attribute(:hair_colour)
+    assert_equal "Yellow", sample.get_attribute(:eye_colour)
+    assert_equal Date.parse("12 March 1970"), Date.parse(sample.get_attribute(:date_of_birth))
   end
 
   test 'dependant destroy content blob' do

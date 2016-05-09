@@ -9,7 +9,7 @@ class SampleAttributeType < ActiveRecord::Base
 
   scope :primitive_string_types, where(base_type: 'String', regexp: '.*')
 
-  BASE_TYPES = %w(Integer Float String DateTime Date Text Boolean)
+  BASE_TYPES = %w(Integer Float String DateTime Date Text Boolean SeekStrain CV)
 
   def validate_allowed_type
     unless SampleAttributeType.allowed_base_types.include?(base_type)
@@ -29,8 +29,8 @@ class SampleAttributeType < ActiveRecord::Base
     self == self.class.default
   end
 
-  def validate_value?(value)
-    check_value_against_base_type(value) && check_value_against_regular_expression(value)
+  def validate_value?(value,additional_options={})
+    check_value_against_base_type(value,additional_options) && check_value_against_regular_expression(value)
   end
 
   def as_json(_options = nil)
@@ -56,8 +56,8 @@ class SampleAttributeType < ActiveRecord::Base
     match && match.to_s == value.to_s
   end
 
-  def check_value_against_base_type(value)
-    base_type_handler.validate_value(value)
+  def check_value_against_base_type(value,additional_options)
+    base_type_handler.validate_value?(value,additional_options)
   end
 
   def pre_process_value(value)

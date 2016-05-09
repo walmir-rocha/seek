@@ -34,8 +34,8 @@ Samples.initTable = function (selector, enableRowSelection, opts) {
     if(options.ajax) {
         options.columns = [{ data: 'id'},{ data: 'title'}];
         $j('table thead th', selector).each(function (index, column) {
-            if($j(column).data('accessorName'))
-                options.columns.push({ data: 'data.' + $j(column).data('accessorName') });
+            if($j(column).data('hashKey'))
+                options.columns.push({ data: 'data.' + $j(column).data('hashKey') });
         });
     }
 
@@ -46,12 +46,37 @@ Samples.initTable = function (selector, enableRowSelection, opts) {
             dateColumns.push(index);
         }
     });
-
-    if(dateColumns.length > 0)
+    if(dateColumns.length > 0) {
         options["columnDefs"].push({
             "targets": dateColumns,
             "type": "date"
         });
+    }
+    // Parse Strain data into a link
+    // Only needed if we're loading the data from ajax
+    if($j('table', selector).data('sourceUrl')) {
+        var strainColumns = [];
+        $j('table thead th', selector).each(function (index, column) {
+            if($j(column).data('columnType') == 'SeekStrain') {
+                strainColumns.push(index);
+            }
+        });
+        if(strainColumns.length > 0) {
+            options["columnDefs"].push({
+                "targets": strainColumns,
+                "render": function (data, type, row) {
+                    if(data.id) {
+                        if (data.title)
+                            return '<a href="/strains/' + data.id + '">' + data.title + '</a>';
+                        else
+                            return '<span class="none_text">' + data.id + '</span>';
+                    } else {
+                        return '<span class="none_text">Not specified</span>';
+                    }
+                }
+            });
+        }
+    }
 
     if(enableRowSelection) {
         $j.extend(options, options, {
