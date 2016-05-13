@@ -1,5 +1,5 @@
 class SamplesController < ApplicationController
-  respond_to :html
+  respond_to :html, :xml
   include Seek::PreviewHandling
   include Seek::AssetsCommon
   include Seek::IndexPager

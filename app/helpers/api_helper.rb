@@ -194,7 +194,10 @@ module ApiHelper
         end
       end
     elsif object.respond_to?('content_blob')
-      blob_xml builder, object.content_blob
+      blob = object.content_blob
+      if !blob.nil?
+        blob_xml builder, blob
+      end
     end
 
     if object.respond_to?('avatar')

@@ -29,7 +29,19 @@ core_xlink(assay).merge(is_root ? xml_root_attributes : {}) do
     end
 
     associated_resources_xml parent_xml,assay
-    
+
+    parent_xml.tag! "relations" do
+      for direction in 0..2 do
+        parent_xml.tag! direction_name(direction).tr(' ', '_').downcase do
+          assay.assay_assets.each do |aa|
+            asset = aa.asset
+            if aa[:direction] == direction
+              parent_xml.tag! asset.class.name.underscore, core_xlink(aa.asset)
+            end
+          end
+        end
+      end
+
+    end
   end
-  
 end

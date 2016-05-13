@@ -13,6 +13,7 @@ class SampleTypesController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
+      format.xml
       format.json { render json: @sample_types }
     end
   end
@@ -22,6 +23,7 @@ class SampleTypesController < ApplicationController
   def show
     respond_to do |format|
       format.html # show.html.erb
+      format.xml
       format.json { render json: @sample_type }
     end
   end
